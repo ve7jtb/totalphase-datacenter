@@ -50,3 +50,23 @@ python3 scripts/datacenter_ctl.py stop -o /tmp/usb12_session
 python3 scripts/datacenter_ctl.py analyze /path/to/capture.tdc
 python3 scripts/datacenter_ctl.py analyze /path/to/capture.csv --json
 ```
+
+## Linux direct SDK capture
+
+`scripts/beagle_sdk_capture.py` supports Beagle USB 12 and USB 480 through the
+Python SDK, without Data Center:
+
+```bash
+python3 -B scripts/beagle_sdk_capture.py --sdk ~/beagle-api-linux-arm64-v6.00 --port 0 --output /tmp/fidont-usb
+```
+
+Keep stdin open while recording; press Enter to stop. Parent EOF also stops the
+worker. JSON status messages report `ready`, `stopped`, or `error`. Readiness is
+reported only after the analyzer and output files are open and capture enabled.
+Output is raw packet JSONL and CSV with timestamps and SDK status/event flags,
+not Data Center `.tdc` or hierarchical CSV. Target power is left unchanged.
+USB 5000 is not supported by this worker.
+
+The conformance tool bundles a copy of the worker and starts it before FIDONT
+tests. Keep the bundled copy in sync when updating this script.
+Run tests with `python3 -B -m unittest discover -s tests`.
